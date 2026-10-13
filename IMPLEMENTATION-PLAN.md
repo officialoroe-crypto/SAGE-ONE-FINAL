@@ -17,13 +17,50 @@
 
 Consequences for this plan:
 
-- The GitHub repo, its PRs, `SAGE_PROJECT_MEMORY.md`, and the Flutter/FastAPI stack
-  **cannot be inspected from here** and are marked 🚫 **UNVERIFIABLE-HERE**. This plan
-  does not claim anything about them.
-- Everything below is assessed against **this codebase**, which is a browser-only,
+- Everything in §1 is assessed against **this codebase**, which is a browser-only,
   `localStorage`-persisted SPA with no backend. Its realistic ceiling is the
   **UI-prototype** rung of the vision's ladder — it cannot reach CONNECTED/VERIFIED for
   anything that requires a server, a real provider account, or a device permission.
+- The GitHub side is no longer an evidence gap: it was inspected live via the GitHub
+  API on 2026-10-14. See **§0.1 GitHub reconciliation** for the verified facts.
+
+### 0.1 GitHub reconciliation — verified live, 2026-10-14
+
+Every §8 claim in the vision document was checked directly against
+`officialoroe-crypto/sage-one` (public, default branch `main`, last push
+2026-10-13T20:39Z):
+
+| Vision claim | Verified result |
+|---|---|
+| `docs/FOUNDATIONAL_PRODUCT_VISION.md` on `main` | ✅ Present (11,123 B) |
+| `docs/SAGE_PROJECT_MEMORY.md` on `main` | ✅ Present (18,735 B) |
+| PR #240 — screen-aware assistant spec, documentation-only | ✅ **Open**, 4 files: adds `docs/product/SCREEN_AWARE_ASSISTANT.md`, `docs/PRODUCT_COMPLETION_AND_VERIFICATION_RULES.md`, `docs/ENGINEERING_START_HERE.md`, modifies `SAGE_PROJECT_MEMORY.md`. Doc-only as claimed; **not** evidence that screen sharing runs. |
+| PR #237 — command-center redesign preview | ✅ **Open**, 1 file, head `design/radical-sage-ui-reset-20261013`. Visual preview only. |
+| `TODO.md` records foundations + unfinished areas | ✅ Matches exactly: complete sections for durable worker, research OS, provider routing, command path voice, memory UX, sales execution, Developer Mode; remaining = production SMS/OTP, third-party integrations, button-by-button audit, live backend smoke test, physical Android/device QA. Its own principle: *"Do not mark an item complete because code exists alone."* |
+| Stack = Flutter + web + Python/FastAPI backend | ✅ Repo tree: **328 files — 184 `.py`, 57 `.dart`, 45 `.md`, 13 `.js`**, modular backend (`brain/`, `execution/`, `memory/`, `identity/`, `economy/`, `sales/`, `permissions/`, `tasks/`, `research/`, `database/`, …), `app/` (Flutter), `frontend/`, `website/`, `tests/` (70 files), `.github/` CI. |
+
+**Key relationship discovered:** the repo's `website/` directory **is this project's
+source lineage** — same files (`index.html`, `css/styles.css`, all 11 `js/` modules) —
+but it has since evolved **ahead** of this workspace snapshot. Repo `website/` state:
+
+- Adds `js/backend.js` (11,501 B) — a "SAGE Core" backend connection layer.
+- **Already applied the P0 honesty fixes**: `spark: 0`, `lifetimeEarned: 0`, zeroed
+  earning buckets, plus a `demoDataVersion: 2` migration that zeroes imported demo
+  balances; animations run with `preview: true, noCredit: true`; research retry honestly
+  toasts *"Live research is not connected yet. No retry request was sent."*
+- **Hardened secrets**: deletes the legacy `localStorage` provider key, disables browser
+  API-key mode ("Provider keys belong on the backend"), routes live AI through
+  `S.backend.chat()`, and returns an honest *"Sign in to SAGE Core"* answer instead of
+  substituting a sample response.
+- Contains this workspace's `AG_ACT_KNOWN` dispatcher fix (so the fix already reached
+  `main`'s website).
+- Repo-only files: `website/README.md`, `website/js/backend.js`.
+- Workspace-only files: `img/sage-lockup.png`, `img/contact.png`, `tools/make_logo.py`,
+  plus this plan and `SAGE-ONE-SOURCE.md`.
+- **Divergence verdict:** 7 of 14 shared files differ. The repo version is the successor
+  (backend-connected + honest); this workspace is an older, pre-honesty browser-key
+  snapshot. Findings F1–F5 below describe **this snapshot**; F3, F4 and F5 are **already
+  fixed in `main`'s `website/`** and need to be reconciled, not re-fixed.
 
 **Status taxonomy** (vision §20 ladder, extended for prototype reality):
 
@@ -45,7 +82,7 @@ Consequences for this plan:
 |---|---|---|---|---|
 | Text conversation + streaming | ✅ VERIFIED-LOCAL | `js/ai.js` built-in engine; time-based stream reveal `js/screens-home.js` (`startStream`) | No backend; answers are local-engine or user-key LLM | Keep; route through a command path shared with voice (P1) |
 | Nepali / English UI | ✅ VERIFIED-LOCAL | `S.DATA.I18N` (en/ne) in `js/data.js`; `S.t()` in `js/core.js` | Speech support absent; mixed-language QA not done | Add ne/en coverage checks per screen (P1) |
-| Live LLM (user key) | 🟠 PARTIAL | `js/ai.js:631,641` — real `fetch` to OpenAI-compatible `/chat/completions`, openai + gemini | Key lives in `localStorage` (`sage-ai-cfg-v1`); single provider family | Keep for prototype; keys must move server-side for any real build (P4 contract) |
+| Live LLM (user key) | 🟠 PARTIAL | `js/ai.js:631,641` — real `fetch` to OpenAI-compatible `/chat/completions`, openai + gemini | Key lives in `localStorage` (`sage-ai-cfg-v1`); single provider family. **Superseded in `main`:** repo `website/ai.js` removes browser keys entirely and routes through authenticated SAGE Core (§0.1) | Reconcile toward the server-managed model; treat browser keys as legacy |
 | Voice STT / TTS / wake word | ⛔ ABSENT | **Zero** occurrences of `SpeechRecognition`, `speechSynthesis`, `mediaDevices`, `MediaRecorder` anywhere | Entire voice stack missing | P1: browser `speechSynthesis` + `webkitSpeechRecognition` prototype with honest unavailable states |
 | "SAGE, stop" | ⛔ ABSENT | No voice session to interrupt | — | P1: `speechSynthesis.cancel()` + AbortController on the request path |
 | Floating pet / orb states | 🟡 UI-PROTOTYPE | 11 CSS orb states incl. listening/thinking (`S.stateOrb`, `LOGO_STATES` in `data.js`) | Purely decorative; no link to real activity | Wire orb states to real task/voice events when P1 lands |
@@ -55,8 +92,8 @@ Consequences for this plan:
 
 | Capability | Status | Local evidence | Gap | Next action |
 |---|---|---|---|---|
-| Screen help (read screen, understand, assist) | ⛔ ABSENT | No `getDisplayMedia` / `mediaDevices` usage anywhere | No capture, no OCR/vision, no session model. PR #240 is 🚫 UNVERIFIABLE-HERE and even there was doc-only | P2: browser `getDisplayMedia` → single frame → in-memory context → live-key vision call; honest stop/revoke indicator |
-| Android MediaProjection screen help | 🚫 UNVERIFIABLE-HERE | No Flutter/Android code in this workspace | Requires the mobile repo + real device QA | Route to backend/mobile repo; do not claim |
+| Screen help (read screen, understand, assist) | ⛔ ABSENT | No `getDisplayMedia` / `mediaDevices` usage anywhere | No capture, no OCR/vision, no session model. PR #240 verified **open & documentation-only** (§0.1) — the spec exists, the implementation does not | P2: browser `getDisplayMedia` → single frame → in-memory context → live-key vision call; honest stop/revoke indicator |
+| Android MediaProjection screen help | 🚫 In main repo, unverified at runtime | Flutter `app/` + Android CI exist in `sage-one` (§0.1); no Android code in this workspace | Requires device QA — `TODO.md` explicitly lists "Manual Android/device QA" as open | Do not claim until a physical-device test exists |
 | Device control (`computer.*` / `phone.*` / `file.*`) | ⛔ ABSENT | No permission model of any kind | — | P4 contract defines the permission vocabulary; enforcement is backend work |
 | Permission & approval engine | ⛔ ABSENT | Dispatcher `S.act` (`js/app.js:153`) routes any click to any action; no risk tiers, no grants | Every action is callable; hiding buttons is the only "control" | P3 introduces the first real approval gate (message send); full engine = backend |
 
@@ -97,16 +134,17 @@ Consequences for this plan:
 
 ## 2. Blocking findings — the code violates the vision's own honesty rules
 
-These are **proven with line numbers** and are the cheapest, highest-value fixes available,
-because the master prompt's first principle is "never fabricate":
+These are **proven with line numbers** in **this workspace's snapshot**. Note (§0.1):
+`main`'s `website/` has **already fixed F3, F4 and F5** — for this snapshot the fix is
+first to **reconcile with `main`**, not to re-invent the change.
 
 | # | Finding | Evidence | Fix |
 |---|---|---|---|
 | F1 | `gen-video` records a video file that was never produced and pays a fabricated NPR reward | `js/app.js:371-386` — `ownedFiles.push({name:'AI_Video_…mp4'})`, `earnings.content += 15`, toast "Video rendered ✓" | Remove the fake entry + reward; show "Video generation needs a configured provider" |
 | F2 | `gen-image` claims "Image generated" for a random canvas gradient | `js/app.js:361-370` + `js/screens-apps.js:317-337` (`drawGenerated`) | Relabel "Demo artwork (no provider configured)" |
-| F3 | New accounts seed with 2,580 Spark; vision §16 says start at zero | `js/core.js:22` | Reseed `spark: 0` (demo grant must be explicit, not silent) |
-| F4 | State seeds `lifetimeEarned: 24500` + four earning buckets presented as user history | `js/core.js:23-24` | Reseed to zero or badge the wallet as demo data |
-| F5 | Every API key lives in `localStorage` | `js/ai.js:9` (`sage-ai-cfg-v1`), `cfg()` in `js/screens-agents.js` | Acceptable only while the app is purely local; P4 contract requires server-held secrets |
+| F3 | New accounts seed with 2,580 Spark; vision §16 says start at zero | `js/core.js:22` | ✅ **Already fixed in `main`** (`spark: 0` + demo-balance migration). Here: reconcile with `main` |
+| F4 | State seeds `lifetimeEarned: 24500` + four earning buckets presented as user history | `js/core.js:23-24` | ✅ **Already fixed in `main`** (reseeded to 0). Here: reconcile with `main` |
+| F5 | Every API key lives in `localStorage` | `js/ai.js:9` (`sage-ai-cfg-v1`), `cfg()` in `js/screens-agents.js` | ✅ **Already fixed in `main`** (keys deleted; server-managed providers). Here: reconcile with `main` |
 | F6 | No risk tiers or approvals — any click executes any action | `S.act` dispatcher, `js/app.js:153-538` | First real gate arrives with P3 (message sending); full engine is backend work |
 
 ---
@@ -117,8 +155,16 @@ The vision's §7 ordering assumes the backend repo. Adapted to **this workspace*
 only, user-supplied LLM key, no server), the highest-value buildable order is:
 
 ### P0 — Honesty & demo-data pass (½ day, no dependencies)
-Fix F1–F4. Add a persistent "DEMO DATA" badge on wallet, marketplace, research sources,
-agent runs, and files. Remove fabricated artifacts and rewards.
+**Revised after §0.1:** `main`'s `website/` already contains the honest baseline (F3–F5
+fixed, `preview/noCredit` animations). Preferred P0 = **rebase this snapshot onto `main`'s
+`website/`, preserving workspace-only assets** (2 images + `make_logo.py` + these docs),
+then fix what `main` did **not**: F1 (`gen-video` fabrication verified still present in
+`main` at `website/js/app.js:376-388` — fake `.mp4` entry + NPR 15 reward) and F2
+(canvas-doodle "Image generated", `main` at `website/js/app.js:364-375`). Also confirm
+`main`'s own P0 regressions: the fixed `sim-earn`/`gen-video` now deduct Spark against a
+zero balance, so the honest path must not charge for unproduced artifacts. Add a
+persistent "DEMO DATA" badge on wallet, marketplace, research sources, agent runs, and
+files.
 **Acceptance:** no UI claims an artifact that doesn't exist; new profile shows 0 Spark and
 0 earnings; video generation shows an honest provider-needed state; all existing screens
 still render; zero console errors (re-run the full route sweep used this session).
@@ -161,8 +207,10 @@ backend repo can implement against it.
 ### Explicitly NOT buildable in this workspace (route to the backend/mobile repos)
 Flutter app · real auth + database · Android MediaProjection · scheduled workers ·
 SMS/email/messaging-platform connectors · ComfyUI or any server-side provider hosting ·
-Developer Mode against GitHub · server-side permission enforcement · the PR #237/#240
-work (UNVERIFIABLE-HERE — re-verify from the repo before quoting their status anywhere).
+Developer Mode against GitHub · server-side permission enforcement. Per §0.1 these
+all exist **as code in `main`** (backend modules, Flutter app, CI) but remain
+**runtime-unverified** — `TODO.md` itself lists live backend smoke test and physical
+device QA as open. Never quote them as working without that evidence.
 
 ---
 
@@ -171,11 +219,16 @@ work (UNVERIFIABLE-HERE — re-verify from the repo before quoting their status 
 This table is the living STATUS register. Per vision §20, each row already carries:
 requirement → local evidence → status → gap → next action. When work lands, update the
 row with the date, the batch, and the verification actually performed (route sweep, live
-network test, permission-flow test) — never with an intention. If/when the GitHub repo is
-accessible from an agent session, reconcile this plan against `TODO.md`, PR #237 and
-PR #240 first, and record their real status before changing any capability's rung.
+network test, permission-flow test) — never with an intention.
+
+**Reconciliation status (2026-10-14): DONE.** This plan was reconciled against the live
+`main` branch, `TODO.md`, and PRs #237/#240 via the GitHub API — see §0.1. The highest-
+priority remaining action is now **P0: rebase this snapshot onto `main`'s hardened
+`website/`** and then fix F1/F2, which verification shows are still live in `main`.
 
 ---
 
-*Generated 2026-10-14 from an in-session audit of this workspace. Every file/line reference
-was read during the session; no claim in this document rests on the vision text alone.*
+*Generated 2026-10-14 from an in-session audit of this workspace, plus live GitHub API
+verification of `officialoroe-crypto/sage-one` (repo tree, TODO.md, PRs #237/#240, and a
+file-by-file diff of `website/` vs this snapshot). Every file/line reference was fetched
+or read during the session; no claim in this document rests on the vision text alone.*
