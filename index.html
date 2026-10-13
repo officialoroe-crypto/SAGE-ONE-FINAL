@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>SAGE ONE — Your Personal AI Mentor &amp; Execution Partner</title>
+<meta name="description" content="SAGE ONE — Nepal's AI mentor & execution partner. Learn, earn, evolve." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css?v=2" />
+<link rel="icon" href="img/sage-mark.png?v=1" type="image/png" />
+</head>
+<body>
+  <!-- Cosmic desktop backdrop -->
+  <div class="cosmos" aria-hidden="true">
+    <canvas id="stars"></canvas>
+    <div class="nebula n1"></div>
+    <div class="nebula n2"></div>
+    <div class="moon"></div>
+    <div class="peaks"></div>
+  </div>
+
+  <!-- Desktop dashboard (board 2) -->
+  <div class="desk" id="desk" aria-hidden="true">
+    <aside class="desk-side">
+      <div class="ds-brand">
+        <span class="ds-logo" id="dsLogo"></span>
+        <div class="ds-brandtext"><b>SAGE <i>ONE</i></b><span>YOUR EXECUTION PARTNER</span></div>
+      </div>
+      <nav class="ds-nav" id="dsNav"></nav>
+      <div class="ds-credits">
+        <div class="dsc-head">
+          <span class="scoin">S</span>
+          <div class="grow"><b>SAGE CREDITS</b><div class="dsc-amt" id="dsCredits">2,580</div><div class="tiny">≈ NPR <span id="dsCreditsNpr">2,580</span></div></div>
+          <svg class="dsc-spark" viewBox="0 0 60 24" fill="none"><path d="M1 20 10 14 18 17 27 9 35 12 44 5 52 8 59 2" stroke="#4fe39b" stroke-width="1.6"/><path d="M1 20 10 14 18 17 27 9 35 12 44 5 52 8 59 2V24H1z" fill="rgba(79,227,155,.14)"/></svg>
+        </div>
+        <button class="btn primary xs" style="width:100%" data-act="buy-spark">+ Add Credits</button>
+      </div>
+      <div class="ds-prem" data-act="nav" data-arg="premium">
+        <span class="ds-crown">👑</span>
+        <div class="grow"><b>Premium Plan</b><div class="tiny">Unlock more. Do more.</div></div>
+        <span class="ds-chev">›</span>
+      </div>
+      <div class="ds-user" data-act="nav" data-arg="profile">
+        <span class="ds-ava" id="dsAva">S</span>
+        <div class="grow"><b id="dsName">SAGE User</b><div class="tiny">Execution Partner</div></div>
+        <span class="ds-status" title="Online"></span>
+      </div>
+    </aside>
+
+    <div class="desk-body">
+      <!-- Mt Everest + Buddha cosmic backdrop (board 1) -->
+      <div class="desk-scene" aria-hidden="true">
+        <svg viewBox="0 0 1000 350" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#071a3c"/>
+              <stop offset="45%" stop-color="#050f28"/>
+              <stop offset="100%" stop-color="#03060f"/>
+            </linearGradient>
+            <radialGradient id="moonG" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#fffdf0" stop-opacity=".95"/>
+              <stop offset="45%" stop-color="#dfe6d2" stop-opacity=".35"/>
+              <stop offset="100%" stop-color="#a9c4ff" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="farG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#456aa8"/>
+              <stop offset="55%" stop-color="#182a54"/>
+              <stop offset="100%" stop-color="#060d1f"/>
+            </linearGradient>
+            <linearGradient id="eveG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#cfe0f7"/>
+              <stop offset="16%" stop-color="#8aa9d6"/>
+              <stop offset="52%" stop-color="#2c4676"/>
+              <stop offset="100%" stop-color="#060d1f"/>
+            </linearGradient>
+            <linearGradient id="nearG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a2c55"/>
+              <stop offset="100%" stop-color="#04070f"/>
+            </linearGradient>
+            <linearGradient id="budG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fff0c4"/>
+              <stop offset="34%" stop-color="#f0c273"/>
+              <stop offset="72%" stop-color="#c08a3c"/>
+              <stop offset="100%" stop-color="#6b4416"/>
+            </linearGradient>
+            <radialGradient id="haloG" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#ffdf9a" stop-opacity=".5"/>
+              <stop offset="55%" stop-color="#ffc76a" stop-opacity=".16"/>
+              <stop offset="100%" stop-color="#ffc76a" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="4"/>
+            </filter>
+          </defs>
+
+          <rect width="1000" height="350" fill="url(#skyG)"/>
+
+          <!-- stars -->
+          <g fill="#dceaff">
+            <circle cx="62" cy="34" r="1.7" opacity=".9"/><circle cx="140" cy="74" r="1.1" opacity=".6"/>
+            <circle cx="212" cy="28" r="1.4" opacity=".8"/><circle cx="296" cy="60" r="1" opacity=".5"/>
+            <circle cx="370" cy="24" r="1.6" opacity=".85"/><circle cx="446" cy="80" r="1.1" opacity=".55"/>
+            <circle cx="524" cy="40" r="1.3" opacity=".75"/><circle cx="602" cy="20" r="1.7" opacity=".9"/>
+            <circle cx="676" cy="70" r="1" opacity=".5"/><circle cx="754" cy="30" r="1.5" opacity=".8"/>
+            <circle cx="700" cy="104" r="1.2" opacity=".6"/><circle cx="884" cy="26" r="1.6" opacity=".85"/>
+            <circle cx="948" cy="96" r="1.2" opacity=".6"/><circle cx="110" cy="128" r="1.3" opacity=".65"/>
+            <circle cx="250" cy="116" r="1" opacity=".5"/><circle cx="340" cy="140" r="1.4" opacity=".7"/>
+            <circle cx="560" cy="126" r="1.2" opacity=".6"/><circle cx="470" cy="126" r="1" opacity=".45"/>
+            <circle cx="820" cy="152" r="1.3" opacity=".6"/><circle cx="180" cy="182" r="1" opacity=".4"/>
+          </g>
+
+          <!-- full moon -->
+          <circle cx="845" cy="120" r="62" fill="url(#moonG)"/>
+          <circle cx="845" cy="120" r="26" fill="#fdfbe9" opacity=".92"/>
+          <circle cx="836" cy="113" r="5" fill="#e6e2c8" opacity=".5"/>
+          <circle cx="854" cy="129" r="7" fill="#e6e2c8" opacity=".4"/>
+          <circle cx="850" cy="107" r="3.5" fill="#e6e2c8" opacity=".45"/>
+
+          <!-- distant range -->
+          <path d="M0 258 L80 198 L150 242 L230 176 L310 238 L390 194 L470 250 L560 188 L650 244 L740 192 L830 248 L920 206 L1000 246 L1000 350 L0 350 Z" fill="url(#farG)" opacity=".75"/>
+
+          <!-- Mt Everest massif -->
+          <path d="M120 350 L300 168 L344 208 L400 78 L448 138 L492 62 L560 168 L620 128 L780 350 Z" fill="url(#eveG)"/>
+          <!-- snow caps / ridges -->
+          <path d="M492 62 L560 168 L532 158 L492 190 L458 144 L400 178 L400 78 Z" fill="#f2f7ff" opacity=".55"/>
+          <path d="M492 62 L522 108 L490 124 L466 98 Z" fill="#ffffff" opacity=".85"/>
+          <path d="M400 78 L430 122 L400 134 L378 110 Z" fill="#ffffff" opacity=".7"/>
+          <path d="M300 168 L330 208 L302 200 L284 182 Z" fill="#e8f1ff" opacity=".5"/>
+          <!-- ridge shadow -->
+          <path d="M492 62 L560 168 L620 128 L780 350 L560 350 Z" fill="#050c1e" opacity=".38"/>
+          <path d="M492 62 L448 138 L400 190 L300 350 L120 350 Z" fill="#ffffff" opacity=".05"/>
+
+          <!-- foreground ridge -->
+          <path d="M0 302 L110 280 L230 314 L360 286 L500 318 L640 290 L780 322 L900 296 L1000 318 L1000 350 L0 350 Z" fill="url(#nearG)"/>
+
+          <!-- Seated Buddha (right of the hero orb) -->
+          <g transform="translate(618 96) scale(0.86)">
+            <ellipse cx="86" cy="112" rx="128" ry="120" fill="url(#haloG)"/>
+            <g fill="url(#budG)" filter="url(#softGlow)" opacity=".35">
+              <circle cx="86" cy="52" r="40"/><path d="M86 96c-38 0-58 40-62 96h124c-4-56-24-96-62-96z"/>
+            </g>
+            <g fill="url(#budG)">
+              <!-- crossed legs / lotus base -->
+              <path d="M12 236c0-20 32-34 74-34s74 14 74 34c0 10-12 16-30 18H42c-18-2-30-8-30-18z"/>
+              <path d="M24 214c14-16 40-26 62-26s48 10 62 26c-14-6-36-10-62-10s-48 4-62 10z" opacity=".75"/>
+              <!-- body + robe -->
+              <path d="M86 74c-27 0-46 26-52 62-5 30-10 56-16 78h136c-6-22-11-48-16-78-6-36-25-62-52-62z"/>
+              <!-- arms -->
+              <path d="M40 118c-14 20-20 50-22 76l20 4c2-26 8-52 18-70z" opacity=".9"/>
+              <path d="M132 118c14 20 20 50 22 76l-20 4c-2-26-8-52-18-70z" opacity=".9"/>
+              <!-- hands in dhyana mudra -->
+              <ellipse cx="86" cy="196" rx="40" ry="14"/>
+              <!-- head -->
+              <circle cx="86" cy="48" r="31"/>
+              <!-- ushnisha -->
+              <circle cx="86" cy="20" r="13"/>
+              <circle cx="86" cy="7" r="6"/>
+              <!-- elongated ears -->
+              <ellipse cx="55" cy="54" rx="7" ry="21"/>
+              <ellipse cx="117" cy="54" rx="7" ry="21"/>
+            </g>
+            <!-- halo ring -->
+            <circle cx="86" cy="46" r="52" fill="none" stroke="rgba(255,224,160,.6)" stroke-width="1.6"/>
+            <circle cx="86" cy="46" r="62" fill="none" stroke="rgba(255,214,140,.25)" stroke-width="1" stroke-dasharray="3 7"/>
+          </g>
+        </svg>
+        <div class="desk-scene-fade"></div>
+      </div>
+      <header class="desk-top">
+        <div class="dt-search">
+          <span class="dt-sic"></span>
+          <input placeholder="More than an AI. It's your execution partner." autocomplete="off" data-act="chat">
+        </div>
+        <button class="dt-ic" data-act="toast" data-arg="No new notifications" id="dtBell1"></button>
+        <button class="dt-ic dot" data-act="nav" data-arg="wallet" id="dtBell2"></button>
+        <button class="dt-credits" data-act="nav" data-arg="spark"><span class="scoin sm">S</span><b id="dtSpark">2,580</b></button>
+        <button class="dt-orb" data-act="nav" data-arg="logostates" id="dtOrb"></button>
+        <button class="dt-ic plus" data-act="chat" title="New chat">+</button>
+      </header>
+      <main class="desk-content" id="deskContent"></main>
+    </div>
+
+    <aside class="desk-right" id="deskRight"></aside>
+  </div>
+
+  <button class="view-toggle" id="viewToggle" data-act="toggle-mode">📱 Phone view</button>
+
+  <main class="stage-wrap">
+    <header class="brandbar">
+      <div class="brandbar-logo" id="brandLogo"></div>
+      <div class="brandbar-text">
+        <h1>SAGE <span>ONE</span></h1>
+        <p>Your Personal AI Mentor &amp; Execution Partner</p>
+      </div>
+      <div class="brandbar-quote" lang="ne">“सपना होइन, लक्ष्य बनाऔं। लक्ष्य होइन, कार्य बनाऔं। कार्य होइन, वास्तविकता बनाऔं।”</div>
+    </header>
+
+    <!-- Phone -->
+    <div class="device" id="device">
+      <div class="device-notch"></div>
+      <div class="statusbar">
+        <span class="sb-time">9:41</span>
+        <span class="sb-icons">
+          <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor" opacity=".4"/></svg>
+          <svg width="15" height="11" viewBox="0 0 15 11"><path d="M7.5 9.6 9.9 7A3.4 3.4 0 0 0 5.1 7zM2.2 4.3a7.6 7.6 0 0 1 10.6 0l1.4-1.5a9.6 9.6 0 0 0-13.4 0z" fill="currentColor"/></svg>
+          <svg width="25" height="11" viewBox="0 0 25 11"><rect x=".5" y=".5" width="21" height="10" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="15" height="7" rx="1.6" fill="currentColor"/><path d="M23 4v3a2 2 0 0 0 0-3z" fill="currentColor" opacity=".5"/></svg>
+        </span>
+      </div>
+      <div class="screen" id="screen"></div>
+      <nav class="tabbar" id="tabbar"></nav>
+      <div class="home-indicator"></div>
+    </div>
+
+    <footer class="pagefoot">
+      <span>SAGE ONE · More Than An App — It's Your Future Partner</span>
+      <span class="nepal-flag">🇳🇵 Built in Nepal</span>
+    </footer>
+  </main>
+
+  <!-- Overlays -->
+  <div class="sheet-root" id="sheetRoot"></div>
+  <div class="toast-root" id="toastRoot"></div>
+  <div class="fx-root" id="fxRoot" aria-hidden="true"></div>
+
+  <script src="js/core.js"></script>
+  <script src="js/data.js?v=2"></script>
+  <script src="js/components.js?v=3"></script>
+  <script src="js/ai.js?v=2"></script>
+  <script src="js/screens-onboarding.js"></script>
+  <script src="js/screens-home.js?v=3"></script>
+  <script src="js/screens-apps.js"></script>
+  <script src="js/screens-system.js"></script>
+  <script src="js/screens-lab.js"></script>
+  <script src="js/screens-agents.js?v=3"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>
