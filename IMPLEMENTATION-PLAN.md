@@ -70,7 +70,7 @@ but it has since evolved **ahead** of this workspace snapshot. Repo `website/` s
 | 🟠 PARTIAL | Real but limited (needs user-supplied key / single provider / etc.) |
 | 🟡 UI-PROTOTYPE | Screen and flow exist; the behavior is simulated |
 | ⛔ ABSENT | No code for this capability exists in this workspace |
-| 🚫 UNVERIFIABLE-HERE | Belongs to the GitHub/backend/Flutter side; no evidence obtainable from this workspace |
+| 🚫 UNVERIFIABLE-HERE | No evidence obtainable (GitHub access was restored 2026-10-14 — §0.1; no rows carry this status anymore) |
 
 ---
 
@@ -126,7 +126,7 @@ but it has since evolved **ahead** of this workspace snapshot. Repo `website/` s
 | Evolution | ✅ VERIFIED-LOCAL | 13 stages × low/mid/high; progress only via `addProgress` (skill), never money (`js/core.js:69`) | Local only | Keep — this matches the vision's design |
 | AI provider routing | 🟠 PARTIAL | openai/gemini toggle in AI settings (`ai-provider` case); integration probes for 6 services | No router, no health/cost/latency selection, no Image/Video/Voice providers | P4 contract defines the provider interfaces |
 | Integration credentials | 🟠 REAL-PROBE ⚠️ | `TESTS` map makes **genuine network calls** (openai, telegram, discord, supabase, github, webhook) with honest 401s — verified live this session (`js/screens-agents.js:395,432`) | Keys stored in `localStorage` — acceptable for a local demo, violates vision §12 ("keys on the server") for any real build | Keep for prototype; P4 moves secrets server-side |
-| Developer Mode | ⛔ ABSENT | — | — | Backend/GitHub-side; 🚫 UNVERIFIABLE-HERE |
+| Developer Mode | ⛔ ABSENT here · code in main | Not in this workspace. `main` has `dev_agent/` + `coordination/` modules and TODO.md marks the claim/handoff/preview safety gates complete (runtime-unverified) | Nothing to build here | Backend-repo work; verify against runtime evidence before claiming |
 | Offline / PWA | ⛔ ABSENT | No `serviceWorker` | — | Optional later batch |
 | Audit logs | ⛔ ABSENT | — | — | P4 contract |
 
