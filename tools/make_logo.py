@@ -24,7 +24,7 @@ from PIL import Image
 SPHERE = r"C:\Users\Nishant\AppData\Local\Temp\freebuff-desktop-pastes\paste-1791878121385-11908.png"
 LOGO = r"C:\Users\Nishant\Pictures\songs\content-(81) oooo.png"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "img")
+OUT = os.path.join(ROOT, "website", "img")
 
 CANVAS = 1024
 BADGE_R = CANVAS // 2
