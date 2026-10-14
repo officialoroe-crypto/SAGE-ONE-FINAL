@@ -12,7 +12,7 @@ window.SAGE = window.SAGE || {};
     { id: 'community', name: 'Community', sub: 'Connect & Share', ic: 'i-users', g: 'linear-gradient(135deg,#e0335c,#4a0a1e)' },
     { id: 'aistudio', name: 'AI Studio', sub: 'Create with AI', ic: 'i-sparkles', g: 'linear-gradient(135deg,#0aa6c9,#083448)' },
     { id: 'files', name: 'Files', sub: 'Your documents', ic: 'i-folder', g: 'linear-gradient(135deg,#d98324,#4a2708)' },
-    { id: 'logostates', name: 'Logo States', sub: '9 animations', ic: 'i-orbit', g: 'linear-gradient(135deg,#2e86ff,#0b1b3f)' },
+    { id: 'logostates', name: 'Logo States', sub: '10 animations', ic: 'i-orbit', g: 'linear-gradient(135deg,#2e86ff,#0b1b3f)' },
     { id: 'premium', name: 'Premium', sub: 'Unlock more. Do more.', ic: 'i-crown', g: 'linear-gradient(135deg,#6d4dff,#2a1060)' }
   ];
   S.APPS = APPS;
@@ -28,7 +28,7 @@ window.SAGE = window.SAGE || {};
       const askBar = `<div class="hh-ask">
         <span>${S.icon('i-search')}</span>
         <input id="homeAsk" placeholder="Ask SAGE anything…" autocomplete="off">
-        <button class="hh-mic" data-act="chat">${S.icon('i-mic')}</button>
+        <button class="hh-mic" data-act="voice-toggle" aria-label="Talk to SAGE" title="Talk to SAGE (voice in)">${S.icon('i-mic')}</button>
         <button class="hh-send" data-act="home-ask">${S.icon('i-send')}</button>
       </div>`;
       const actions = [
@@ -186,6 +186,7 @@ window.SAGE = window.SAGE || {};
         <div class="chat-body" id="chatBody">${renderChat()}</div>
         <div class="chat-input">
           <input class="input" id="chatInput" placeholder="${S.t('chat.placeholder')}" autocomplete="off">
+          <button class="send-btn mic-btn" id="voiceMic" data-act="voice-toggle" aria-label="Talk to SAGE" title="Talk to SAGE (voice in)">${S.icon('i-mic')}</button>
           <button class="send-btn" data-act="chat-send">${S.icon('i-send')}</button>
         </div>
       </div>`,

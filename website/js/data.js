@@ -203,6 +203,7 @@ window.SAGE = window.SAGE || {};
     { id:'recovery',  name:'RECOVERY',  sub:'Rebuilding Systems',    c:'#d0b3ff', c2:'#70d3fc' },
     { id:'earning',   name:'EARNING',   sub:'Money Earned',          c:'#f5a623', c2:'#ffd97a' },    { id:'premium',   name:'PREMIUM',   sub:'Unlocking Features',     c:'#9d7bff', c2:'#c9b3ff' },
     { id:'listening', name:'LISTENING', sub:'Awaiting Your Words',    c:'#1f9dff', c2:'#7fe9ff' },
+    { id:'speaking',  name:'SPEAKING',  sub:'Voice Reply Active',     c:'#2fe0b7', c2:'#8ef0ff' },
     { id:'thinking',  name:'THINKING',  sub:'Reasoning In Depth',     c:'#14b8ff', c2:'#a06bff' }
   ];
 

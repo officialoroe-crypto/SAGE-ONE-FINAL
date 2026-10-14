@@ -23,7 +23,7 @@ window.SAGE = window.SAGE || {};
 
   R.logostates = {
     view: () => `
-      ${S.topNav('Logo States & Animations', 'Nine moods of your execution partner')}
+      ${S.topNav('Logo States & Animations', 'Ten moods of your execution partner')}
       <div class="ls-grid">
         ${S.DATA.LOGO_STATES.map(s => `
         <div class="ls-tile" data-act="logo-preview" data-arg="${s.id}">

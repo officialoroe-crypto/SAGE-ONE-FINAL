@@ -83,9 +83,9 @@ but it has since evolved **ahead** of this workspace snapshot. Repo `website/` s
 | Text conversation + streaming | ✅ VERIFIED-LOCAL | `js/ai.js` built-in engine; time-based stream reveal `js/screens-home.js` (`startStream`) | No backend; answers are local-engine or user-key LLM | Keep; route through a command path shared with voice (P1) |
 | Nepali / English UI | ✅ VERIFIED-LOCAL | `S.DATA.I18N` (en/ne) in `js/data.js`; `S.t()` in `js/core.js` | Speech support absent; mixed-language QA not done | Add ne/en coverage checks per screen (P1) |
 | Live LLM (user key) | 🟠 PARTIAL | `js/ai.js:631,641` — real `fetch` to OpenAI-compatible `/chat/completions`, openai + gemini | Key lives in `localStorage` (`sage-ai-cfg-v1`); single provider family. **Superseded in `main`:** repo `website/ai.js` removes browser keys entirely and routes through authenticated SAGE Core (§0.1) | Reconcile toward the server-managed model; treat browser keys as legacy |
-| Voice STT / TTS / wake word | ⛔ ABSENT | **Zero** occurrences of `SpeechRecognition`, `speechSynthesis`, `mediaDevices`, `MediaRecorder` anywhere | Entire voice stack missing | P1: browser `speechSynthesis` + `webkitSpeechRecognition` prototype with honest unavailable states |
-| "SAGE, stop" | ⛔ ABSENT | No voice session to interrupt | — | P1: `speechSynthesis.cancel()` + AbortController on the request path |
-| Floating pet / orb states | 🟡 UI-PROTOTYPE | 11 CSS orb states incl. listening/thinking (`S.stateOrb`, `LOGO_STATES` in `data.js`) | Purely decorative; no link to real activity | Wire orb states to real task/voice events when P1 lands |
+| Voice STT / TTS / wake word | ✅ IMPLEMENTED (browser) | `website/js/voice.js` (loaded after `backend.js`): `webkitSpeechRecognition` STT (en-IN / ne-NP), `speechSynthesis` TTS with watchdog + burst coalescing, opt-in wake-word standby with per-enable disclosure, floating voice pill + mic buttons (chat `#voiceMic`, home `hh-mic`); spoken change-commands (theme / language / name / screen nav / Spark balance / mute) and honest UNAVAILABLE state when SR absent | Physical mic + audible TTS not verifiable in the headless dev container (STT service returned `network` — handled with honest toast, no fake transcript); Nepali TTS quality depends on OS voices; owner-signed-in Core reply speaking verified only up to the watcher wiring (owner Google account required) | Physical-device mic/audio pass; verify one live owner chat spoken aloud |
+| "SAGE, stop" | ✅ IMPLEMENTED | `V.stopAll()` in `voice.js`: stops recognition, cancels speech, clears wake + queued speech, halts in-flight AI reveal (`ai.phase='done'`); always-visible ■ in the pill | Research-step timer is route-gated, not abortable directly | Expose an abort hook for the research step timer |
+| Floating pet / orb states | ✅ WIRED (voice) | 12 `LOGO_STATES` incl. new SPEAKING (`.st-speaking` wave/glow CSS); voice state machine drives the chat orb (`listening`/`thinking`/`speaking` via `chatOrb`) | Orb on non-chat screens still decorative | Drive more orb states from real task events (research, payments) |
 | Consent-based memory | ⛔ ABSENT | Chat capped at 30 messages (`chatPush` in `screens-home.js`); no memory model | No inspect/edit/delete memory system | P4 contract must define memory service; UI review screen later |
 
 ### B. SAGE as eyes & hands (vision §1A/§1D)
@@ -169,15 +169,22 @@ files.
 0 earnings; video generation shows an honest provider-needed state; all existing screens
 still render; zero console errors (re-run the full route sweep used this session).
 
-### P1 — Voice loop v1 (1–2 days, browser-only)
+### P1 — Voice loop v1 (1–2 days, browser-only) — ✅ DONE (`website/js/voice.js`)
 `speechSynthesis` TTS for the AI reply; `webkitSpeechRecognition` STT where available
 (Chrome), with an explicit "voice unavailable in this browser" state elsewhere. Distinct
 states: listening / thinking / speaking / unavailable. "SAGE, stop" cancels speech and
 aborts an in-flight request. Nepali voice replies when the conversation is Nepali (locale
 from `state.lang`).
-**Acceptance:** speak → text appears in chat → answer streams → is spoken aloud; stop
-cancels within 300 ms; Firefox/Safari show honest unavailability instead of dead buttons;
-orb states reflect real voice states.
+**Acceptance (verified in Chromium via `S.voice.handleTranscript`, which is the exact
+function STT feeds):** non-command speech → chat (signed-out follows the hardened
+Core-only rule: sign-in guidance, no fake offline answer); reply-speak watcher armed on
+the send path and released by both local-stream and Core `showAnswer` completions;
+stop is synchronous (cancel + wake-off + reveal halt, ≪300 ms); states visible in the
+pill + chat orb incl. new SPEAKING state; unsupported-browser path returns an honest
+UNAVAILABLE pill label. **Not verified here:** physical microphone/audible audio
+(container has no mic/audio device; STT service returned `network`), Firefox/Safari
+unavailability path (no such browser in this environment — code path exists),
+full speak-aloud of a live Core answer (needs the owner Google account).
 
 ### P2 — Screen help v1 (2–3 days, browser-only)
 `getDisplayMedia` permission flow (real browser prompt), capture one frame per question,
