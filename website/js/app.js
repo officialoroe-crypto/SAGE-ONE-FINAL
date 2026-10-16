@@ -361,29 +361,19 @@ window.SAGE = window.SAGE || {};
         else S.toast('Code Generation — coming soon ⏳');
         break;
       }
+      /* P0 honesty (F2): no image provider is connected. The canvas below is a local
+         demo drawing — never charge Spark, never record an AI-generated file, never
+         claim an image was "generated" by a model. */
       case 'gen-image': {
-        if (st.spark < 5) { S.toast('Not enough Spark — buy more first'); S.go('spark'); break; }
         const prompt = ((S.$('#gen-prompt') || {}).value || '').trim();
-        S.addSpark(-5, 'Image generated');
         S.drawGenerated(prompt);
-        st.ownedFiles.push({ name: 'AI_Image_' + (st.ownedFiles.length + 1) + '.png', size: '2.1 MB', when: 'Just now' });
-        S.save();
-        S.toast('Image generated · −5 Spark');
-        const lvl = S.addProgress(4, 'AI image created');
-        if (lvl) S.handleLevelUp(lvl);
+        S.toast('Demo artwork drawn locally · no image provider is configured, so nothing was charged and no file was saved.');
         break;
       }
+      /* P0 honesty (F1): no video provider is connected — no artifact exists, so no
+         file entry, no NPR content reward and no Spark charge may be recorded. */
       case 'gen-video': {
-        const secs = S.$('#vlen') ? +S.$('#vlen').value : 8;
-        const cost = 25 + Math.max(0, secs - 4) * 2;
-        if (st.spark < cost) { S.toast('Not enough Spark — need ' + cost); S.go('spark'); break; }
-        S.addSpark(-cost, 'Video rendered');
-        st.ownedFiles.push({ name: 'AI_Video_' + secs + 's.mp4', size: (secs * 1.4).toFixed(1) + ' MB', when: 'Just now' });
-        st.earnings.content += 15; st.lifetimeEarned += 15; S.save();
-        S.toast('Video rendered ✓ −' + cost + ' Spark · +NPR 15 content reward');
-        const lvl = S.addProgress(8, 'AI video rendered');
-        if (lvl) S.handleLevelUp(lvl);
-        S.go('files');
+        S.toast('Video generation needs a configured provider. No video was rendered, no file was created, and no Spark was charged.');
         break;
       }
 

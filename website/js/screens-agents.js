@@ -45,6 +45,7 @@ window.SAGE = window.SAGE || {};
         <div class="grow">
           <h2 class="screen-title">Good morning, ${S.esc(nm)}</h2>
           <div class="tiny muted">${running} agent${running === 1 ? '' : 's'} working · ${apprs.length} approval${apprs.length === 1 ? '' : 's'} waiting on you</div>
+          <div class="mt8">${S.demoTag('simulated dashboard stats')}</div>
         </div>
         <button class="btn xs primary" data-act="nav" data-arg="agent-market">${S.icon('i-plus')} Hire</button>
       </div>
@@ -79,7 +80,7 @@ window.SAGE = window.SAGE || {};
         <div class="card" style="text-align:center;padding:22px"><div style="font-size:26px;margin-bottom:6px">✅</div>
           <b class="small">All clear</b><div class="tiny muted mt8">No approvals waiting. Agents act alone within their guardrails.</div></div>`}
 
-      <div class="sect-label">Agent team · live runs</div>
+      <div class="sect-label">Agent team · live runs ${S.demoTag('simulated runs')}</div>
       ${runs.map(r => `
         <div class="run-row" data-act="run-detail" data-arg="${r.id}" id="rr-${r.id}">
           <span class="rr-ava">${r.emoji}</span>

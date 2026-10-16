@@ -179,15 +179,15 @@ window.SAGE = window.SAGE || {};
 
   /* ===== AI Studio tools ===== */
   S.DATA.TOOLS = [
-    { id:'image', name:'Image Generation', sub:'5 Spark', ic:'i-image', g:'linear-gradient(135deg,#1b5cff,#0b2f7a)', live:true },
-    { id:'video', name:'Video Generation', sub:'Dynamic (length, density, complexity)', ic:'i-video', g:'linear-gradient(135deg,#8b3fe4,#2a1060)', live:true },
+    { id:'image', name:'Image Generation', sub:'Demo artwork · no provider', ic:'i-image', g:'linear-gradient(135deg,#1b5cff,#0b2f7a)', live:false },
+    { id:'video', name:'Video Generation', sub:'Not connected · no provider', ic:'i-video', g:'linear-gradient(135deg,#8b3fe4,#2a1060)', live:false },
     { id:'code',  name:'Code Generation', sub:'Coming soon', ic:'i-code', g:'linear-gradient(135deg,#00a86b,#073a28)', live:false }
   ];
 
   /* ===== Spark usage (board) ===== */
   S.DATA.SPARK_USAGE = [
-    { k:'Image Generation', v:'5 Spark' },
-    { k:'Video Generation', v:'Dynamic (length, density, complexity)' },
+    { k:'Image Generation', v:'Demo only · no provider' },
+    { k:'Video Generation', v:'Not connected · no provider' },
     { k:'Marketplace Fees', v:'8% → 1% (based on volume)' },
     { k:'Transaction Fee', v:'≈ 0.3% (based on volume)' }
   ];

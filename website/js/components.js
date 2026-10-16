@@ -466,5 +466,10 @@ window.SAGE = window.SAGE || {};
       <svg class="spark-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2L12 2z"/></svg>
       ${S.fmtSpark(S.state().spark)}</span>`;
   };
+  /* P0 honesty: persistent marker on screens whose numbers, listings, files and
+     transactions are seeded prototype data rather than real records. */
+  S.demoTag = function (label) {
+    return `<span class="pill gold" title="Sample data for this prototype — not real records">DEMO DATA${label ? ' · ' + S.esc(label) : ''}</span>`;
+  };
 
 })(window.SAGE);

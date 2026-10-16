@@ -137,7 +137,7 @@ window.SAGE = window.SAGE || {};
     'auth-continue', 'kyc-start', 'kyc-done', 'premium-upgrade', 'premium-confirm', 'premium-cancel',
     'buy-spark', 'buy-spark-amount', 'buy-spark-custom', 'send-spark', 'send-spark-go',
     'withdraw', 'withdraw-go', 'earn-tier', 'buy-listing', 'buy-confirm',
-    'gen-image', 'gen-video', 'rs-analyze', 'fail-retry',
+    'rs-analyze', 'fail-retry',
     'src-all', 'src-detail', 'apply-job', 'enroll', 'course-complete', 'sell-submit',
     'rs-tab', 'rs-source', 'agent-hire', 'hire-go', 'wf-run', 'ig-test',
     'ai-mode', 'ai-provider', 'ai-save'

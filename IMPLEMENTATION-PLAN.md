@@ -140,8 +140,8 @@ first to **reconcile with `main`**, not to re-invent the change.
 
 | # | Finding | Evidence | Fix |
 |---|---|---|---|
-| F1 | `gen-video` records a video file that was never produced and pays a fabricated NPR reward | `js/app.js:371-386` — `ownedFiles.push({name:'AI_Video_…mp4'})`, `earnings.content += 15`, toast "Video rendered ✓" | Remove the fake entry + reward; show "Video generation needs a configured provider" |
-| F2 | `gen-image` claims "Image generated" for a random canvas gradient | `js/app.js:361-370` + `js/screens-apps.js:317-337` (`drawGenerated`) | Relabel "Demo artwork (no provider configured)" |
+| F1 | `gen-video` records a video file that was never produced and pays a fabricated NPR reward | ~~`js/app.js:371-386`~~ **✅ FIXED 2026-10-16** — `website/js/app.js` `gen-video` case now only toasts "No video was rendered, no file was created, and no Spark was charged." No `ownedFiles.push`, no `earnings.content += 15`, no `addSpark(-cost)`, no redirect to Files. Screen copy (`website/js/screens-apps.js` `R['ai-video']`) states "Video generation needs a configured provider" + planned-price wording; `R.aistudio` banner and `SPARK_USAGE`/`TOOLS` entries in `website/js/data.js` relabelled "Not connected · no provider". **Live evidence:** with a seeded 500 Spark balance, `SAGE.act('gen-video')` left `spark=500, ownedFiles=0, lifetimeEarned=0, earnings.content=0`, stayed on `ai-video`, and showed the honest toast. |
+| F2 | `gen-image` claims "Image generated" for a random canvas gradient | ~~`js/app.js:361-370`~~ **✅ FIXED 2026-10-16** — `website/js/app.js` `gen-image` case draws the local canvas doodle, then toasts "Demo artwork drawn locally · no image provider is configured, so nothing was charged and no file was saved." The 5 Spark charge, the fake `AI_Image_*.png` file entry and the "AI image created" progress award were removed; `gen-image`/`gen-video` were also removed from `backend.js` `DEMO_ONLY` so the honest handler (not a generic blocker) runs. Screen (`R['ai-image']`) pill now reads "DEMO · no charge", button "Draw Demo Artwork", with a notice explaining nothing is charged or saved. **Live evidence:** `SAGE.act('gen-image')` with 500 Spark left `spark=500, ownedFiles=0`, canvas pixels changed (doodle really drawn), honest toast shown. |
 | F3 | New accounts seed with 2,580 Spark; vision §16 says start at zero | `js/core.js:22` | ✅ **Already fixed in `main`** (`spark: 0` + demo-balance migration). Here: reconcile with `main` |
 | F4 | State seeds `lifetimeEarned: 24500` + four earning buckets presented as user history | `js/core.js:23-24` | ✅ **Already fixed in `main`** (reseeded to 0). Here: reconcile with `main` |
 | F5 | Every API key lives in `localStorage` | `js/ai.js:9` (`sage-ai-cfg-v1`), `cfg()` in `js/screens-agents.js` | ✅ **Already fixed in `main`** (keys deleted; server-managed providers). Here: reconcile with `main` |
@@ -154,20 +154,32 @@ first to **reconcile with `main`**, not to re-invent the change.
 The vision's §7 ordering assumes the backend repo. Adapted to **this workspace** (browser
 only, user-supplied LLM key, no server), the highest-value buildable order is:
 
-### P0 — Honesty & demo-data pass (½ day, no dependencies)
-**Revised after §0.1:** `main`'s `website/` already contains the honest baseline (F3–F5
-fixed, `preview/noCredit` animations). Preferred P0 = **rebase this snapshot onto `main`'s
-`website/`, preserving workspace-only assets** (2 images + `make_logo.py` + these docs),
-then fix what `main` did **not**: F1 (`gen-video` fabrication verified still present in
-`main` at `website/js/app.js:376-388` — fake `.mp4` entry + NPR 15 reward) and F2
-(canvas-doodle "Image generated", `main` at `website/js/app.js:364-375`). Also confirm
-`main`'s own P0 regressions: the fixed `sim-earn`/`gen-video` now deduct Spark against a
-zero balance, so the honest path must not charge for unproduced artifacts. Add a
-persistent "DEMO DATA" badge on wallet, marketplace, research sources, agent runs, and
-files.
-**Acceptance:** no UI claims an artifact that doesn't exist; new profile shows 0 Spark and
-0 earnings; video generation shows an honest provider-needed state; all existing screens
-still render; zero console errors (re-run the full route sweep used this session).
+### P0 — Honesty & demo-data pass — ✅ DONE (2026-10-16)
+Rebase onto `main`'s hardened `website/` happened earlier (F3–F5 already fixed there;
+`preview/noCredit` animations present). This session fixed what `main` did **not**:
+F1 (video fabrication) and F2 (canvas-doodle "Image generated"), both in `website/`.
+Also relabelled the dependent copy that implied live generation: `R.aistudio` header +
+video banner, `R['ai-image']`, `R['ai-video']`, `R.files` header, `S.DATA.TOOLS` and
+`S.DATA.SPARK_USAGE` — all now say "no provider configured / demo" instead of quoting
+prices for services that do not exist. Added `S.demoTag()` in `website/js/components.js`
+and placed the persistent **DEMO DATA** badge on all five required surfaces: wallet,
+marketplace, research sources, agent runs, files.
+**Acceptance — all verified 2026-10-16 against the running build (`127.0.0.1:8080`,
+served bytes == disk bytes):**
+- No UI claims an unproduced artifact: `grep` for `AI_Video_`/`AI_Image_`/`content reward`/
+  `Video rendered`/`Image generated` over `website/js/` returns only the explanatory
+  comments; both generator handlers record nothing and charge nothing.
+- New profile (localStorage cleared → reload): `spark: 0`, `lifetimeEarned: 0`,
+  `earnings: {0,0,0,0}`, `tx: []`, `demoDataVersion: 2`, `ownedFiles: []`.
+- Video generation shows an honest provider-needed state (screen notice + toast).
+- All screens render: automated sweep of **37/37 routes** — 0 navigation errors,
+  0 empty screens; DEMO DATA badge present on all 5 target routes.
+- Zero **new** console errors: only the two pre-existing `sage-one-api.onrender.com`
+  `/identity/config` CORS failures remain (honestly surfaced as
+  `CORE SIGN-IN UNAVAILABLE`; that backend CORS restriction is backlog item P0-CORS).
+- Regression guard: `sim-earn` still runs `preview/noCredit` (no balance change), and the
+  zero-balance path can no longer be charged for an unproduced artifact, since
+  `gen-image`/`gen-video` do no charging at all.
 
 ### P1 — Voice loop v1 (1–2 days, browser-only) — ✅ DONE (`website/js/voice.js`)
 `speechSynthesis` TTS for the AI reply; `webkitSpeechRecognition` STT where available
@@ -229,9 +241,15 @@ row with the date, the batch, and the verification actually performed (route swe
 network test, permission-flow test) — never with an intention.
 
 **Reconciliation status (2026-10-14): DONE.** This plan was reconciled against the live
-`main` branch, `TODO.md`, and PRs #237/#240 via the GitHub API — see §0.1. The highest-
-priority remaining action is now **P0: rebase this snapshot onto `main`'s hardened
-`website/`** and then fix F1/F2, which verification shows are still live in `main`.
+`main` branch, `TODO.md`, and PRs #237/#240 via the GitHub API — see §0.1.
+
+**P0 status (2026-10-16): DONE — F1 and F2 fixed and verified live** (evidence in §2 and
+§3 P0); the snapshot rebase onto `main`'s hardened `website/` was completed earlier, so
+`website/` is the single canonical web copy (the old root-level `js/`/`index.html` no
+longer exist on disk). Next batch in order: **P2 screen help v1** (browser
+`getDisplayMedia`), then P3 messaging approval gate, then P4 API contract. The
+owner's launch queue (deploy security, Nepal legal, a11y, UX) is tracked separately in
+`memory/BACKLOG_SECURITY_LEGAL_LAUNCH.md` and runs after this plan's buildable batches.
 
 ---
 

@@ -183,7 +183,7 @@ window.SAGE = window.SAGE || {};
       </div>
 
       <!-- Source panel -->
-      <div class="sect-label">Source Panel <span class="tiny">sample cards only · not live research data</span></div>
+      <div class="sect-label">Source Panel <span class="tiny">sample cards only · not live research data</span> ${S.demoTag('sources are examples')}</div>
       <div class="card src-panel">
         <div class="sp-head"><span style="color:var(--electric-2)">‹</span><b class="small">Example Sources</b><span class="tiny muted">Preview only · no sources fetched</span></div>
         ${S.DATA.LIVE_SOURCES.map(s => `
@@ -288,7 +288,10 @@ window.SAGE = window.SAGE || {};
           <span style="width:30px;height:30px;display:block">${S.logo(30, { spin: false })}</span>
           <div><h2 class="screen-title" style="font-size:17px;letter-spacing:3px">SAGE WALLET</h2></div>
         </div>
-        <span class="pill gold">${st.premium ? 'PREMIUM' : 'BASIC'}</span>
+        <div class="row" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">
+          ${S.demoTag('sample balance & history')}
+          <span class="pill gold">${st.premium ? 'PREMIUM' : 'BASIC'}</span>
+        </div>
       </div>
 
       <div class="balance-card">

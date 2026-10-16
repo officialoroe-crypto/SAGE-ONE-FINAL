@@ -20,7 +20,8 @@ window.SAGE = window.SAGE || {};
         (!mktQuery || l.title.toLowerCase().includes(mktQuery.toLowerCase())));
       return `
       <div class="row between mb12" style="min-height:44px">
-        <div><h2 class="screen-title">Marketplace</h2><div class="tiny muted">Buy, sell, and explore trusted listings</div></div>
+        <div><h2 class="screen-title">Marketplace</h2><div class="tiny muted">Buy, sell, and explore trusted listings</div>
+          <div class="mt8">${S.demoTag('sample listings · no real trades')}</div></div>
         <button class="btn xs primary" data-act="nav" data-arg="sell">${S.icon('i-plus')} Sell</button>
       </div>
       <div class="search-bar">${S.icon('i-search')}<input id="mkt-q" placeholder="Search anything…" value="${S.esc(mktQuery)}" data-act="mkt-search"></div>
@@ -243,7 +244,8 @@ window.SAGE = window.SAGE || {};
       const st = S.state();
       return `
       <div class="row between mb12" style="min-height:44px">
-        <div><h2 class="screen-title">Files</h2><div class="tiny muted">Create images, videos, code &amp; more</div></div>
+        <div><h2 class="screen-title">Files</h2><div class="tiny muted">Storage preview · uploads and AI export are not connected</div>
+          <div class="mt8">${S.demoTag('sample files · uploads are not connected')}</div></div>
         <button class="btn xs primary" data-act="toast" data-arg="Upload dialog (demo)">${S.icon('i-plus')} Upload</button>
       </div>
       <div class="chiprow"><button class="chip active">Recent</button><button class="chip">Documents</button><button class="chip">Media</button></div>
@@ -270,7 +272,7 @@ window.SAGE = window.SAGE || {};
   R.aistudio = {
     view: () => `
       <div class="row between mb12" style="min-height:44px">
-        <div><h2 class="screen-title">AI Studio</h2><div class="tiny muted">Create images, videos, code &amp; more</div></div>
+        <div><h2 class="screen-title">AI Studio</h2><div class="tiny muted">Demo tools · no image, video or code provider is connected</div></div>
         ${S.sparkTag()}
       </div>
       <div class="grid2">
@@ -288,21 +290,22 @@ window.SAGE = window.SAGE || {};
           <span class="small muted">${S.esc(u.k)}</span><span class="small" style="color:var(--electric-2)">${S.esc(u.v)}</span></div>`).join('')}
       </div>
       <div class="banner mt12"><div class="row between">
-        <div><h4>Video Generation · Dynamic Pricing</h4><p>Cost scales with length, density and complexity — quoted before each render.</p></div>
+        <div><h4>Video Generation · Not connected</h4><p>No render happens and no Spark is charged. Planned price will scale with length, density and complexity once a provider is configured.</p></div>
         <div style="color:var(--accent-glow)">${S.icon('i-video')}</div></div></div>`
   };
 
   R['ai-image'] = {
     back: 'aistudio',
     view: () => `
-      ${S.topNav('Image Generation', '5 Spark per image')}
+      ${S.topNav('Image Generation', 'Demo artwork · no image provider configured')}
       <canvas class="gen-canvas" id="genCanvas" width="340" height="340"></canvas>
-      <div class="field mt12"><label>Prompt</label><input class="input" id="gen-prompt" placeholder="Cosmic SAGE emblem over Himalayan peaks…"></div>
+      <div class="field mt12"><label for="gen-prompt">Prompt</label><input class="input" id="gen-prompt" placeholder="Cosmic SAGE emblem over Himalayan peaks…"></div>
       <div class="row between mt8" style="gap:8px">
-        <span class="pill blue">${S.icon('i-bolt')} 5 Spark</span>
+        <span class="pill gold">DEMO · no charge</span>
         <span class="tiny muted">Balance: ${S.fmtSpark(S.state().spark)}</span>
       </div>
-      <button class="btn primary mt12" data-act="gen-image">${S.icon('i-sparkles')} Generate Image</button>`,
+      <div class="notice">No image provider is configured in this build — SAGE draws a local demo pattern only. No Spark is charged and no file is saved.</div>
+      <button class="btn primary mt12" data-act="gen-image">${S.icon('i-sparkles')} Draw Demo Artwork</button>`,
     mount() { drawIdle(); }
   };
 
@@ -341,16 +344,17 @@ window.SAGE = window.SAGE || {};
     view: () => {
       const st = S.state();
       return `
-      ${S.topNav('Video Generation', 'Dynamic pricing by clip')}
+      ${S.topNav('Video Generation', 'No video provider configured')}
       <div class="card glow" style="text-align:center;padding:20px">
         <div style="font-size:40px">🎬</div>
-        <b class="small">Render a SAGE motion clip</b>
-        <div class="tiny muted mt8">Price = base 25 Spark + 2 Spark per extra second (max 20s).</div>
+        <b class="small">Video generation needs a configured provider</b>
+        <div class="tiny muted mt8">Nothing is rendered in this build: no video, no file, no charge. Planned price = base 25 Spark + 2 Spark per extra second (max 20s).</div>
       </div>
-      <div class="field mt16"><label>Length: <b id="vlen-label">8s</b></label>
+      <div class="field mt16"><label for="vlen">Length: <b id="vlen-label">8s</b></label>
         <input type="range" min="4" max="20" value="8" style="width:100%" id="vlen" data-act="vlen"></div>
-      <div class="row between mt8"><span class="pill blue">${S.icon('i-bolt')} <b id="vcost">41</b> Spark</span>
+      <div class="row between mt8"><span class="pill gold">PLANNED · <b id="vcost">41</b> Spark</span>
         <span class="tiny muted">Balance: ${S.fmtSpark(st.spark)}</span></div>
+      <div class="notice">Attempt a render below to see the honest provider-needed state — nothing is charged either way.</div>
       <button class="btn primary mt16" data-act="gen-video">${S.icon('i-video')} Render Video</button>`;
     },
     mount() {
