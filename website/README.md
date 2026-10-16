@@ -12,6 +12,31 @@ python -m http.server 8080 --directory website
 
 Then open `http://127.0.0.1:8080`.
 
+### Connecting to the Core API from a local page
+
+The production API (`https://sage-one-api.onrender.com`) excludes localhost from its
+CORS allowlist on purpose — a production API must never treat a user's localhost as a
+trusted browser origin. So when the page itself is served from `localhost`/`127.0.0.1`,
+`js/backend.js` defaults to a local backend at `http://127.0.0.1:8000` and the status pill
+reports the truth:
+
+- Backend running → `CORE READY · SIGN IN`.
+- No backend → `CORE OFFLINE · no local backend on http://127.0.0.1:8000 — start it
+  (uvicorn app.main:app) or set window.SAGE_API_BASE_URL`.
+
+To run the API locally:
+
+```sh
+uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+To target a different Core deployment, set `window.SAGE_API_BASE_URL` before
+`js/backend.js` loads. It is deliberately not read from the query string: the Google ID
+token is POSTed to this base, so a crafted link must never be able to redirect it.
+
+Production pages (GitHub Pages, a custom domain) keep using the production API; add a
+staging domain only by setting the `SAGE_CORS_ORIGINS` environment variable on the API.
+
 ## Live connections currently implemented in code
 
 - Owner Google sign-in through the existing `/identity/config` and `/identity/google` endpoints.

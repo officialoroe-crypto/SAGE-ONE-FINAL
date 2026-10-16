@@ -7,10 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV_FILE = Path(os.getenv("SAGE_ENV_FILE", str(BASE_DIR / ".env")))
 # Keep legacy local installs working without making the old Backend folder a
-# hidden dependency of the canonical SAGE ONE repository.
+# hidden dependency of the canonical SAGE ONE repository. The legacy fallback
+# is development-only: a stale local .env (it often sets SAGE_DEV_MODE) must
+# never grant developer/owner access to a production-mode instance.
 if ENV_FILE.exists():
     load_dotenv(ENV_FILE)
-else:
+elif os.getenv("SAGE_ENV", "development").strip().lower() != "production":
     legacy_env = Path("C:/SageOne/Backend/.env")
     if legacy_env.exists():
         load_dotenv(legacy_env)

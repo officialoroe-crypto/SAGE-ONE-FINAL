@@ -15,8 +15,28 @@ Compact reusable prompt for executing this queue: see §7.
       (FastAPI `/docs`, `/redoc`, `/openapi.json` disabled in prod), verbose errors off.
 - [ ] Security headers: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
       Permissions-Policy (static host + API proxy both).
-- [ ] CORS: current `app/main.py` allows all methods/headers + localhost origins →
-      restrict to exact production origin(s), exact methods, no credentials unless needed.
+- [x] CORS **fixed 2026-10-16** (`app/main.py` `_cors_origins` + middleware): exact
+      methods (`GET, POST, PUT, PATCH, DELETE, OPTIONS`) and headers (`Accept,
+      Authorization, Content-Type, X-Request-ID`) instead of `*`; `allow_credentials=False`
+      (browser clients use bearer tokens, never cookies); localhost origins now allowed
+      **only outside production** — previously a production API treated any user's
+      localhost as a trusted origin. Evidence: 14 live curl checks against a local
+      instance (dev allows `127.0.0.1:8080` + github.io, denies evil and `null` origins,
+      preflight grants POST+Authorization+Content-Type without credentials; production
+      denies localhost, still allows github.io; `SAGE_CORS_ORIGINS` staging extension
+      works) + 5 pytest tests in `tests/test_cors_origins.py` (3 new: production allowlist,
+      development origins, deliberate staging opt-in). Verified the deployed instance
+      already serves the production frontend origin correctly — the earlier console
+      CORS error was local dev hitting the production API, which is blocked by design.
+      Frontend now defaults local pages to a local backend (`website/js/backend.js`) with
+      an honest offline hint.
+- [x] Stale legacy-env leak **fixed 2026-10-16** (`config/settings.py`): the
+      `C:/SageOne/Backend/.env` fallback (which sets `SAGE_DEV_MODE`) was consulted even
+      when `SAGE_ENV=production`, silently granting developer/owner access. Legacy
+      fallback is now development-only. Caught by `tests/test_private_mode_config.py`.
+- [x] Flaky test **fixed 2026-10-16** (`tests/test_mission_progress.py`): hardcoded
+      `mission-1` inherited sequence numbers from the durable event store across runs;
+      now uses a unique id per run. Full suite: 233 passed.
 - [ ] Rate limiting on all API endpoints (esp. auth, chat, command).
 - [ ] Input validation + length limits on every request model (chat has a draft; others pending).
 - [ ] Admin/owner routes: Google-owner auth only (already owner-scoped) + explicit

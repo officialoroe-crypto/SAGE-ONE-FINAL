@@ -1,8 +1,14 @@
+import uuid
+
 from execution.progress import MissionProgress
 
 
 def test_progress_events_are_ordered_and_normalized():
-    progress = MissionProgress("mission-1")
+    # The durable event store survives across test runs, so a hardcoded mission
+    # id would inherit old sequences (sequence is derived from persisted
+    # history). A unique id keeps this deterministic while still exercising the
+    # real persistence path.
+    progress = MissionProgress(f"mission-{uuid.uuid4()}")
 
     first = progress.emit(
         "wave_started",

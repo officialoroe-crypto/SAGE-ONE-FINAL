@@ -3,7 +3,18 @@
 window.SAGE = window.SAGE || {};
 (function (S) {
   'use strict';
-  const API_BASE = (window.SAGE_API_BASE_URL || 'https://sage-one-api.onrender.com').replace(/\/+$/, '');
+  /* Resolve the Core API base once, at load.
+     1. window.SAGE_API_BASE_URL — explicit override (set before this script).
+     2. When the page itself is served from a local origin, default to a local
+        backend: the production API excludes localhost from its CORS allowlist
+        on purpose, so a localhost page can never call it — pointing one at the
+        production host only produces a CORS error in the console.
+     3. Otherwise the canonical production API.
+     Deliberately NOT read from the query string: the Google ID token is POSTed
+     to this base, so a crafted link must never be able to redirect it. */
+  const LOCAL_HOSTS = { 'localhost': 1, '127.0.0.1': 1, '[::1]': 1, '::1': 1 };
+  const isLocalPage = typeof location !== 'undefined' && LOCAL_HOSTS[location.hostname] === 1;
+  const API_BASE = (window.SAGE_API_BASE_URL || (isLocalPage ? 'http://127.0.0.1:8000' : 'https://sage-one-api.onrender.com')).replace(/\/+$/, '');
   let ownerToken = null, sessionId = null, config = null, initPromise = null, gisPromise = null;
   function status(text, mode) {
     let el = document.getElementById('sageBackendStatus');
@@ -32,7 +43,13 @@ window.SAGE = window.SAGE || {};
         const data = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error(data.detail || 'Identity configuration unavailable (HTTP ' + r.status + ').');
         config = data; status('CORE READY · SIGN IN', 'ready'); return data;
-      }).catch(err => { status('CORE OFFLINE · ' + String(err.message || err).slice(0, 70), 'error'); throw err; })
+      }).catch(err => {
+        const raw = String(err.message || err);
+        const hint = isLocalPage && !window.SAGE_API_BASE_URL
+          ? 'CORE OFFLINE · no local backend on ' + API_BASE + ' — start it (uvicorn app.main:app) or set window.SAGE_API_BASE_URL'
+          : 'CORE OFFLINE · ' + raw.slice(0, 70);
+        status(hint, 'error'); throw err;
+      })
       .finally(() => { initPromise = null; });
     return initPromise;
   }

@@ -109,40 +109,46 @@ app = FastAPI(
 
 
 def _cors_origins() -> list[str]:
-    """Return explicit CORS allowlist plus the canonical public web-app origin.
+    """Return the production frontend origin plus explicitly allowed extras.
 
-    Render environment overrides used to replace the defaults completely. If
-    SAGE_CORS_ORIGINS was configured without the GitHub Pages origin, browser
-    requests from the deployed frontend failed CORS preflight even though the
-    default configuration included it. Keep the public production frontend
-    allowed while still supporting extra deployment-specific origins.
+    Local development origins are added only outside production: a production
+    API must never treat a user's localhost as a trusted browser origin.
+    Deployment-specific origins (staging, a custom domain) are added only by
+    setting SAGE_CORS_ORIGINS deliberately.
     """
-    canonical = [
-        "https://officialoroe-crypto.github.io",
-    ]
-    defaults = [
+    canonical = ["https://officialoroe-crypto.github.io"]
+    local_development = [
         "http://localhost:8080",
         "http://127.0.0.1:8080",
         "http://localhost:7357",
         "http://127.0.0.1:7357",
+        "http://localhost:8099",
+        "http://127.0.0.1:8099",
     ]
+    defaults = (
+        canonical
+        if settings.ENVIRONMENT.strip().lower() == "production"
+        else canonical + local_development
+    )
     configured = os.getenv("SAGE_CORS_ORIGINS", "")
     supplied = [
         origin.strip().rstrip("/")
         for origin in configured.split(",")
         if origin.strip()
     ]
-    # De-duplicate while preserving order. Configured origins extend, rather
-    # than accidentally remove, the canonical public frontend origin.
-    return list(dict.fromkeys(canonical + defaults + supplied))
+    # Explicit deployment configuration extends the canonical origin.
+    return list(dict.fromkeys(defaults + supplied))
 
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins(),
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    # SAGE browser clients authenticate with Authorization bearer tokens, never
+    # cross-site cookies — credentials stay off so a browser will not attach or
+    # accept them for this API.
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Accept", "Authorization", "Content-Type", "X-Request-ID"],
 )
 
 # Ensure newly introduced durable tables exist when the API starts.
